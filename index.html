@@ -2,148 +2,462 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'; connect-src 'none'">
-<title>讨论地图 · 静态演示</title>
+<title>AI 讨论地图 · 静态演示</title>
 <style>
-:root{color-scheme:light;--paper:#fffdf9;--ink:#252238;--muted:#655e71;--line:#e9e1e1;--lavender:#f3eefc;--accent:#603c9c;--accent-deep:#49257f;--peach:#ffefe4}
-*{box-sizing:border-box}
-[hidden]{display:none!important}
-body{margin:0;background:#f2eef6;color:var(--ink);font:16px/1.65 system-ui,"Microsoft YaHei",sans-serif}
-button,select,input,textarea{font:inherit}
-button,select{cursor:pointer}
-button{min-height:42px}
-button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #986bd8;outline-offset:3px}
-button,input,textarea,select{border:1px solid var(--line);border-radius:10px}
-button{color:var(--ink);background:var(--paper);padding:6px 12px}
-button:hover{border-color:#aa89cf}
-button[aria-pressed="true"]{background:var(--lavender);color:var(--accent-deep);border-color:#a581d0}
-input,textarea,select{color:var(--ink);background:white;padding:8px 10px;min-width:0}
-h1,h2,h3,p{margin:0}
-.shell{max-width:670px;min-height:100vh;margin:auto;background:var(--paper);box-shadow:0 12px 52px #35235416}
-.header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 24px;background:#2e2343;color:#fff}
-.header h1{font-size:19px;letter-spacing:.08em}
-.header button{background:transparent;color:#fff;border-color:#785f97}
-.controls{display:flex;gap:14px;flex-wrap:wrap;align-items:end;padding:14px 24px;background:var(--lavender)}
-.controls label{flex:1 1 136px;font-size:13px;color:var(--muted)}
-.controls select{display:block;width:100%;margin-top:4px}
-.post,.discussion{padding:24px}
-.post{border-bottom:1px solid var(--line)}
-.author{display:flex;gap:12px;align-items:center;margin-bottom:16px}
-.avatar{display:grid;place-items:center;flex:0 0 38px;width:38px;height:38px;border-radius:14px;background:var(--peach);color:#7a3d21;font-weight:700}
-.meta,.hint{color:var(--muted);font-size:13px}
-.post h2{font-size:clamp(22px,5vw,28px);line-height:1.3;margin-bottom:10px}
-.post p+p{margin-top:8px}
-.post-buttons,.footer{display:flex;gap:8px;flex-wrap:wrap}
-.post-buttons{margin-top:16px}
-.discussion>h2{font-size:19px;margin-bottom:10px}
-.map{margin-bottom:22px;border:1px solid #e0d1f2;border-radius:18px;overflow:hidden}
-.map-toggle{display:flex;width:100%;text-align:left;align-items:center;gap:12px;padding:12px 14px;border:0;border-radius:0;background:var(--lavender)}
-.map-toggle:focus-visible{outline-offset:-4px}
-.map-mark{font-size:24px;color:var(--accent)}
-.map-toggle small{display:block;color:var(--muted)}
-.chevron{margin-left:auto;color:var(--accent);font-size:20px}
-.map-content{padding:14px}
-.question{background:#2e2343;color:white;border-radius:12px;padding:12px 14px;text-align:center;font-weight:650}
-.branches{display:grid;grid-template-columns:repeat(auto-fit,minmax(86px,1fr));gap:8px;margin:12px 0 8px}
-.branches button{padding:5px;font-size:14px}
-.branch-note{margin-top:8px;font-size:13px;color:var(--muted)}
-.preview{padding:12px;margin-top:12px;background:var(--peach);border-radius:12px}
-.preview p{margin:5px 0 8px}
-.search-heading{display:flex;align-items:center;gap:8px;margin-bottom:4px}
-.search-heading h3{flex:1;font-size:16px}
-.search{background:#f7f3fb;border-radius:12px;padding:12px;margin:10px 0}
-.search label{display:block;font-size:14px;margin-bottom:4px}
-.search-fields{display:flex;gap:8px}
-.search-fields input{flex:1}
-.search-results button{display:block;width:100%;text-align:left;margin:6px 0}
-.search-results p{margin-top:8px}
-.comment{display:flex;align-items:flex-start;gap:10px;padding:12px 8px;border-bottom:1px solid var(--line);border-radius:8px;overflow-wrap:anywhere}
-.comment .avatar{width:31px;height:31px;flex-basis:31px;font-size:13px;border-radius:10px;background:var(--lavender);color:var(--accent-deep)}
-.comment strong{font-size:14px}
-.comment p{margin-top:2px}
-.comment.highlight{background:#fff0d8}
-.composer{margin-top:21px}
-.composer label{display:block;font-weight:650}
-.composer textarea{display:block;width:100%;resize:vertical;margin:8px 0}
-.primary{color:white;background:var(--accent-deep);border-color:var(--accent-deep)}
-.primary:hover{background:var(--accent)}
-.footer{position:sticky;bottom:0;z-index:1;padding:10px 24px max(10px,env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--paper)}
-.footer button{flex:1;white-space:nowrap}
-.toast{position:fixed;z-index:2;bottom:76px;left:50%;transform:translateX(-50%);width:max-content;max-width:calc(100% - 32px);padding:8px 13px;background:#2e2343;color:#fff;border-radius:10px;text-align:center;font-size:14px}
-@media(max-width:420px){.header,.controls,.post,.discussion,.footer{padding-left:15px;padding-right:15px}.footer button{padding-inline:5px}}
+:root {
+  --brand: #FF8200;
+  --brandstrong: #F46200;
+  --text: #333333;
+  --secondary: #636363;
+  --muted: #939393;
+  --link: #546992;
+  --line: #E6E6E6;
+  --soft: #F8F8F8;
+  --surface: #FFFFFF;
+  --stage: #636363;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+  color: var(--text);
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--stage); font-weight: 400; }
+button, input, textarea, select { font: inherit; }
+button { cursor: pointer; }
+button:disabled { opacity: .55; cursor: not-allowed; }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+.stage { min-height: 100vh; display: flex; justify-content: center; }
+.phone-shell {
+  width: 100%;
+  max-width: 430px;
+  min-height: 100vh;
+  padding-bottom: 84px;
+  background: var(--surface);
+}
+
+/* 考试演示控制台：默认收起，避免占用正文首屏 */
+.exam-tools { padding: 0 14px; background: #FFF9F3; border-bottom: .5px solid var(--line); }
+.exam-tools-toggle {
+  width: 100%;
+  min-height: 38px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  background: transparent;
+  text-align: left;
+}
+.demo-label { color: var(--brandstrong); font-size: 12px; font-weight: 500; }
+.demo-status { margin-left: auto; color: var(--muted); font-size: 11px; font-weight: 400; }
+.exam-tools-chevron { width: 14px; color: var(--muted); font-size: 18px; line-height: 18px; text-align: right; }
+.exam-tools-panel { padding: 0 0 10px; }
+.tool-row { display: flex; gap: 10px; }
+.tool-row label { flex: 1; min-width: 0; color: var(--secondary); font-size: 12px; }
+.tool-row select {
+  display: block;
+  width: 100%;
+  min-height: 34px;
+  margin-top: 4px;
+  padding: 0 8px;
+  border: .5px solid var(--line);
+  border-radius: 6px;
+  background: #FFFFFF;
+  color: var(--text);
+  font-size: 12px;
+}
+
+/* 正文 */
+.post-section { padding: 0 14px 8px; background: #FFFFFF; }
+.author { height: 59px; display: flex; align-items: center; gap: 14px; }
+.avatar {
+  flex: 0 0 auto;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: .5px solid rgba(0, 0, 0, .05);
+  border-radius: 50%;
+  background: var(--soft);
+  color: var(--secondary);
+  font-size: 15px;
+}
+.author-meta { flex: 1; min-width: 0; }
+.author-name {
+  overflow: hidden;
+  color: var(--brandstrong);
+  font-size: 15px;
+  line-height: 19px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.meta {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 18px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.author-tag {
+  padding: 5px 9px;
+  border: .5px solid var(--brand);
+  border-radius: 14px;
+  color: var(--brand);
+  font-size: 11px;
+  white-space: nowrap;
+}
+.post-body {
+  margin: 4px 0 12px;
+  overflow-wrap: anywhere;
+  font-size: 16px;
+  line-height: 23px;
+  white-space: pre-wrap;
+}
+.post-actions {
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  border-top: .5px solid var(--line);
+}
+.post-actions button {
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  background: none;
+  color: var(--secondary);
+  font-size: 12px;
+}
+.section-gap { height: 10px; background: #F5F5F5; }
+
+/* 评论区导航 */
+.discussion-section { background: #FFFFFF; }
+.comment-tabs {
+  position: sticky;
+  top: 0;
+  z-index: 9;
+  height: 44px;
+  display: flex;
+  align-items: stretch;
+  gap: 20px;
+  padding: 0 14px;
+  border-bottom: .5px solid var(--line);
+  background: #FFFFFF;
+  color: var(--muted);
+  font-size: 15px;
+}
+.comment-tabs > div { position: relative; display: flex; align-items: center; }
+.comment-tabs .active { color: var(--text); font-weight: 500; }
+.comment-tabs .active:after {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 24px;
+  height: 3px;
+  border-radius: 9px;
+  background: linear-gradient(90deg, #FEB500, #FE9500);
+  content: '';
+  transform: translateX(-50%);
+}
+
+/* AI 讨论地图 */
+.map-wrap { margin: 10px 14px 13px; overflow: hidden; border: .5px solid var(--line); border-radius: 8px; background: #FFFFFF; }
+.map-toggle {
+  width: 100%;
+  min-height: 50px;
+  padding: 10px 11px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border: 0;
+  background: #FFFFFF;
+  text-align: left;
+}
+.map-symbol { width: 22px; flex: 0 0 22px; }
+.map-toggle-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.map-toggle-text strong { font-size: 14px; font-weight: 500; line-height: 17px; }
+.map-toggle-text small { color: var(--muted); font-size: 11px; line-height: 15px; }
+.chevron { color: var(--muted); font-size: 22px; line-height: 16px; }
+.map-state { padding: 14px; border-top: .5px solid var(--line); color: var(--muted); font-size: 12px; line-height: 19px; }
+.map-tree { padding: 10px 10px 10px; border-top: .5px solid var(--line); }
+.map-center {
+  width: 92%;
+  margin: auto;
+  padding: 7px 10px;
+  border: .5px solid rgba(255, 130, 0, .4);
+  border-radius: 8px;
+  background: rgba(255, 130, 0, .08);
+  text-align: center;
+}
+.map-center small { display: block; margin-bottom: 3px; color: var(--brandstrong); font-size: 11px; }
+.map-center strong { font-size: 14px; font-weight: 500; line-height: 21px; }
+.tree-lines { display: block; width: 100%; height: 22px; }
+.topic-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.topic {
+  min-height: 44px;
+  padding: 6px 4px;
+  border: .5px solid var(--line);
+  border-radius: 6px;
+  background: var(--soft);
+  color: var(--text);
+  font-size: 12px;
+  line-height: 17px;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+.topic.selected { border-color: var(--brand); background: rgba(255, 130, 0, .08); color: var(--brandstrong); }
+.map-footnote { margin: 7px 0 0; color: var(--muted); font-size: 11px; line-height: 16px; text-align: center; }
+.preview { margin-top: 8px; padding: 9px 11px; border-radius: 6px; background: var(--soft); }
+.preview-title { margin: 0 0 5px; font-size: 12px; font-weight: 500; }
+.preview-focus { margin: 0 0 7px; color: var(--secondary); font-size: 12px; line-height: 18px; }
+.quote-author { margin-bottom: 3px; color: var(--secondary); font-size: 12px; }
+.quote-body {
+  display: -webkit-box;
+  overflow: hidden;
+  margin: 0;
+  font-size: 14px;
+  line-height: 20px;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+.preview-actions { display: flex; justify-content: flex-end; padding-top: 5px; }
+.preview-actions button { padding: 6px 0; border: 0; background: none; color: var(--link); font-size: 12px; }
+.map-warning { margin: 7px 0 0; color: var(--muted); font-size: 11px; line-height: 16px; }
+
+/* 原评论与按需搜索 */
+.comments-heading {
+  padding: 0 14px 9px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.comments-heading strong { font-size: 14px; font-weight: 500; }
+.comments-heading-actions { display: flex; align-items: center; gap: 8px; }
+.comments-heading-actions > span { color: var(--muted); font-size: 12px; }
+.comment-search-toggle {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--secondary);
+}
+.comment-search-toggle.open { background: var(--soft); color: var(--brandstrong); }
+.comment-search { padding: 9px 14px 12px; background: var(--soft); }
+.comment-search label { color: var(--secondary); font-size: 12px; }
+.search-line { display: flex; gap: 8px; margin-top: 7px; }
+.search-line input {
+  flex: 1;
+  min-width: 0;
+  padding: 9px;
+  border: .5px solid var(--line);
+  border-radius: 8px;
+  background: #FFFFFF;
+  font-size: 12px;
+}
+.search-line button, .comment-composer button {
+  padding: 0 12px;
+  border: 0;
+  border-radius: 7px;
+  background: var(--brand);
+  color: #FFFFFF;
+  font-size: 12px;
+}
+.search-result { color: var(--secondary); font-size: 12px; line-height: 19px; }
+.search-result button { display: block; padding: 7px 0; border: 0; background: none; color: var(--link); font-size: 12px; text-align: left; }
+
+/* 原生评论 */
+.comment-list { padding: 0 14px; }
+.comment { display: flex; gap: 14px; padding: 13px 0; border-bottom: .5px solid var(--line); scroll-margin-top: 52px; }
+.comment .avatar { width: 42px; height: 42px; }
+.comment-info { flex: 1; min-width: 0; }
+.comment-name { color: var(--secondary); font-size: 14px; line-height: 18px; }
+.comment-text { margin: 6px 0 8px; overflow-wrap: anywhere; font-size: 15px; line-height: 22px; white-space: pre-wrap; }
+.comment-meta { color: var(--muted); font-size: 12px; line-height: 18px; }
+.comment.highlight { margin-right: -14px; margin-left: -14px; padding-right: 14px; padding-left: 14px; background: rgba(255, 130, 0, .12); }
+.comment-composer { margin: 12px 14px; padding-top: 12px; border-top: .5px solid var(--line); }
+.comment-composer label { display: block; margin-bottom: 7px; font-size: 13px; }
+.comment-composer label span { color: var(--muted); font-size: 11px; }
+.comment-composer textarea { width: 100%; min-height: 64px; padding: 9px; border: .5px solid var(--line); border-radius: 6px; font-size: 13px; line-height: 21px; resize: vertical; }
+.comment-composer button { height: 30px; margin-top: 5px; }
+.demo-comment-list { padding: 0 14px; }
+
+/* 固定底部互动栏 */
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  z-index: 11;
+  width: min(430px, 100%);
+  height: 72px;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  transform: translateX(-50%);
+  border-top: .5px solid var(--line);
+  background: #FFFFFF;
+}
+.bottom-bar button {
+  min-width: 78px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: 0;
+  background: none;
+  color: var(--text);
+  font-size: 13px;
+}
+.bottom-bar button.active { color: var(--brandstrong); }
+.toast {
+  position: fixed;
+  bottom: 91px;
+  left: 50%;
+  z-index: 99;
+  width: max-content;
+  max-width: min(380px, 90%);
+  padding: 11px 15px;
+  transform: translateX(-50%);
+  border-radius: 8px;
+  background: rgba(51, 51, 51, .95);
+  color: #FFFFFF;
+  font-size: 12px;
+}
+
+@media (max-width: 430px) {
+  body { background: #FFFFFF; }
+  .phone-shell { max-width: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+/* 静态演示按钮 */
+.action-icon { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.post-actions button[aria-pressed="true"], .bottom-bar button[aria-pressed="true"] { color: var(--brandstrong); }
+.back-top { margin-top: 8px; padding: 4px 0; border: 0; background: none; color: var(--link); font-size: 12px; }
 </style>
 </head>
 <body>
-<main class="shell">
-  <header class="header">
-    <h1>讨论地图</h1>
-    <button id="settings" type="button" aria-expanded="false" aria-controls="controls">切换场景</button>
-  </header>
-  <section id="controls" class="controls" aria-label="演示设置" hidden>
-    <label>讨论场景<select id="scenario"><option value="garden">社区花园</option><option value="reading">周末阅读角</option></select></label>
-    <label>体验身份<select id="identity"><option value="A">访客 A</option><option value="B">访客 B</option></select></label>
-  </section>
-  <article id="post" class="post">
-    <div class="author">
-      <span class="avatar" aria-hidden="true">帖</span>
-      <div><strong>示例发帖人</strong><div class="meta">静态演示 · 帖子与原评论均为虚构内容</div></div>
-    </div>
-    <h2 id="post-title">社区花园的春季改造</h2>
-    <div id="post-body"></div>
-    <div class="post-buttons">
-      <button type="button" id="copy">复制演示链接</button>
-      <button type="button" id="show-comments">查看评论</button>
-      <button type="button" id="post-like" aria-pressed="false">♡ 点赞</button>
-    </div>
-  </article>
-  <section id="discussion" class="discussion" aria-labelledby="discussion-title">
-    <h2 id="discussion-title">讨论区</h2>
-    <div class="map">
-      <button id="map-toggle" type="button" class="map-toggle" aria-expanded="false" aria-controls="map-content">
-        <span class="map-mark" aria-hidden="true">⌘</span>
-        <span><strong>讨论地图</strong><small id="map-hint"></small></span>
-        <span class="chevron" id="map-arrow" aria-hidden="true">⌄</span>
+<div class="stage">
+  <main class="phone-shell" aria-label="AI 讨论地图静态演示">
+    <section class="exam-tools" aria-label="演示设置">
+      <button class="exam-tools-toggle" id="settings" type="button" aria-expanded="false" aria-controls="controls">
+        <span class="demo-label">考试演示</span>
+        <span class="demo-status">示例快照 · 仅在浏览器保存</span>
+        <span id="settings-arrow" class="exam-tools-chevron" aria-hidden="true">⌄</span>
       </button>
-      <div id="map-content" class="map-content" hidden></div>
-    </div>
-    <div class="search-heading">
-      <h3 id="comment-title">原评论</h3>
-      <button type="button" id="search-toggle" aria-expanded="false" aria-controls="search">搜索评论</button>
-    </div>
-    <form id="search" class="search" hidden>
-      <label for="query">关键词</label>
-      <div class="search-fields"><input id="query" type="search" maxlength="40" placeholder="例如：步道"><button type="submit">查找</button></div>
-      <div id="search-results" class="search-results" aria-live="polite"></div>
-    </form>
-    <div id="comment-list"></div>
-    <form id="composer" class="composer">
-      <label for="comment-input">写一条测试评论</label>
-      <p class="hint">评论只保存在当前浏览器。</p>
-      <textarea id="comment-input" rows="2" maxlength="400" placeholder="输入 2–400 个字" required></textarea>
-      <button class="primary" type="submit">保存测试评论</button>
-    </form>
-    <div id="local-comments"></div>
-  </section>
-  <footer class="footer">
-    <button type="button" id="like" aria-pressed="false">♡ 点赞</button>
-    <button type="button" id="write">评论</button>
-    <button type="button" id="save" aria-pressed="false">☆ 收藏</button>
-    <button type="button" id="top">回顶部</button>
-  </footer>
-</main>
-<div id="toast" class="toast" role="status" hidden></div>
+      <div class="exam-tools-panel" id="controls" hidden>
+        <div class="tool-row">
+          <label>内容场景<select id="scenario"><option value="garden">社区花园</option><option value="reading">周末阅读角</option></select></label>
+          <label>体验身份<select id="identity"><option value="A">访客 A</option><option value="B">访客 B</option></select></label>
+        </div>
+        <button class="back-top" type="button" id="top">返回顶部</button>
+      </div>
+    </section>
+    <article class="post-section" id="post">
+      <div class="author">
+        <span id="post-avatar" class="avatar" aria-hidden="true">示</span>
+        <div class="author-meta"><div id="post-author" class="author-name">示例发帖人</div><div id="post-time" class="meta">演示内容</div></div>
+        <span id="post-title" class="author-tag">社区花园</span>
+      </div>
+      <p class="post-body" id="post-body"></p>
+      <div class="post-actions">
+        <button type="button" id="copy" aria-label="转发 · 复制演示链接">
+          <svg class="action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6m0-6-8 8m8 1v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5"/></svg>
+          <span id="post-shares">0</span>
+        </button>
+        <button type="button" id="show-comments" aria-label="查看评论">
+          <svg class="action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 5h13A2.5 2.5 0 0 1 21 7.5v7a2.5 2.5 0 0 1-2.5 2.5H11l-4.5 3v-3h-1A2.5 2.5 0 0 1 3 14.5v-7A2.5 2.5 0 0 1 5.5 5Z"/><path d="M8 11h.1m3.9 0h.1m3.9 0h.1"/></svg>
+          <span id="post-comments-total">0</span>
+        </button>
+        <button type="button" id="post-like" aria-label="点赞" aria-pressed="false">
+          <svg class="action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 10h2l3-6c.5-1 2.3-.7 2.5.8.1 1.3-.2 3.3-.7 4.7H19a2 2 0 0 1 1.9 2.6l-1.9 6a2 2 0 0 1-1.9 1.4H8m-3-10h3v10H5a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1Z"/></svg>
+          <span id="post-likes-total">0</span>
+        </button>
+      </div>
+    </article>
+    <div class="section-gap" aria-hidden="true"></div>
+    <section class="discussion-section" id="discussion" aria-label="讨论区">
+      <div class="comment-tabs"><div class="active">评论<span id="comment-total">0</span></div><div>赞</div><div>转发</div></div>
+      <div class="map-wrap">
+        <button id="map-toggle" class="map-toggle" type="button" aria-expanded="false" aria-controls="map-content">
+          <span class="map-symbol" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3v5M10 8H4M10 8h6M4 8v5M16 8v5" stroke="#FF8200" stroke-width="1.7" stroke-linecap="round"/><circle cx="10" cy="3" r="2" fill="#FF8200"/><circle cx="4" cy="15" r="2" fill="#FF8200"/><circle cx="16" cy="15" r="2" fill="#FF8200"/></svg>
+          </span>
+          <span class="map-toggle-text"><strong>AI 讨论地图</strong><small id="map-hint"></small></span>
+          <span id="map-arrow" class="chevron" aria-hidden="true">⌄</span>
+        </button>
+        <div id="map-content" hidden></div>
+      </div>
+      <div class="comments-heading">
+        <strong id="comment-title">原评论</strong>
+        <div class="comments-heading-actions">
+          <span id="comments-count"></span>
+          <button class="comment-search-toggle" id="search-toggle" type="button" aria-label="搜索原评论" aria-expanded="false" aria-controls="search">
+            <svg class="action-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.6"/><path d="m15.7 15.7 4.2 4.2"/></svg>
+          </button>
+        </div>
+      </div>
+      <form id="search" class="comment-search" hidden>
+        <label for="query">搜索原评论</label>
+        <div class="search-line"><input id="query" type="search" maxlength="40" placeholder="输入关键词查找原评论"><button type="submit">查找</button></div>
+        <div id="search-results" class="search-result" aria-live="polite"></div>
+      </form>
+      <div id="comment-list" class="comment-list"></div>
+      <form id="composer" class="comment-composer">
+        <label for="comment-input">发表测试评论 <span>仅在当前浏览器保存</span></label>
+        <textarea id="comment-input" rows="2" maxlength="400" placeholder="输入 2–400 个字" required></textarea>
+        <button type="submit">发布测试评论</button>
+      </form>
+      <div id="local-comments" class="demo-comment-list"></div>
+    </section>
+    <footer class="bottom-bar">
+      <button type="button" id="like" aria-label="喜欢" aria-pressed="false">
+        <svg class="action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 10h2l3-6c.5-1 2.3-.7 2.5.8.1 1.3-.2 3.3-.7 4.7H19a2 2 0 0 1 1.9 2.6l-1.9 6a2 2 0 0 1-1.9 1.4H8m-3-10h3v10H5a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1Z"/></svg>
+        <span id="like-label">喜欢</span>
+      </button>
+      <button type="button" id="write">
+        <svg class="action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 5h13A2.5 2.5 0 0 1 21 7.5v7a2.5 2.5 0 0 1-2.5 2.5H11l-4.5 3v-3h-1A2.5 2.5 0 0 1 3 14.5v-7A2.5 2.5 0 0 1 5.5 5Z"/><path d="M8 11h.1m3.9 0h.1m3.9 0h.1"/></svg>评论
+      </button>
+      <button type="button" id="save" aria-pressed="false">☆ 收藏</button>
+    </footer>
+  </main>
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<template id="tree-connector">
+  <svg class="tree-lines" viewBox="0 0 320 28" preserveAspectRatio="none" fill="none" aria-hidden="true"><path d="M160 0V12M52 12H268M52 12V28M160 12V28M268 12V28" stroke="#D6D6D6" stroke-width="1.5" vector-effect="non-scaling-stroke"/></svg>
+</template>
 <noscript>启用 JavaScript 后，可展开讨论地图并体验评论互动。</noscript>
 <script>
 'use strict';
 
 const scenarios = {
   garden: {
-    title: '社区花园的春季改造',
+    title: '《社区花园》话题',
+    author: '社区花园观察员',
+    time: '2026年11月13日 15:05',
+    shares: 8,
     paragraphs: [
-      '小区角落有一块闲置花坛。周末的邻里会上，大家提议把它改成共享花园，留出一条能进轮椅和婴儿车的步道。',
-      '第一期只够做三件事。种什么、步道怎么留、浇水由谁负责？欢迎在评论里说说你觉得最先该做什么。'
+      '#社区花园# 小区角落有一块闲置花坛。周末的邻里会上，大家提议把它改成共享花园，留出一条可供轮椅和婴儿车通行的步道。第一期先用现有的花盆和工具做个小样，等邻居走过、用过，再决定下一步。',
+      '种什么、步道怎么留、浇水由谁负责？如果这个月只能先做一件事，你会选什么？欢迎在评论里聊聊。'
     ],
     likes: 24,
     question: '共享花园的第一期应该优先做什么？',
@@ -161,7 +475,10 @@ const scenarios = {
     ]
   },
   reading: {
-    title: '周末阅读角选址',
+    title: '《周末阅读角》话题',
+    author: '阅读角志愿者',
+    time: '2026年11月15日 10:20',
+    shares: 2,
     paragraphs: [
       '邻里活动室计划增加一个周末阅读角，先摆一张小桌和两排书。靠窗的位置采光好，里面的角落比较安静。',
       '活动室准备下周试开一天，大家更喜欢哪个位置？'
@@ -246,8 +563,10 @@ function renderReactions() {
   for (const id of ['post-like', 'like']) {
     const target = $(id);
     target.setAttribute('aria-pressed', String(current.liked));
-    target.textContent = (current.liked ? '♥ 已点赞' : '♡ 点赞') + (id === 'post-like' ? ' ' + total : '');
+    target.setAttribute('aria-label', current.liked ? '取消点赞' : '点赞');
   }
+  $('post-likes-total').textContent = total.toLocaleString('zh-CN');
+  $('like-label').textContent = current.liked ? '已喜欢' : '喜欢';
   $('save').setAttribute('aria-pressed', String(current.saved));
   $('save').textContent = current.saved ? '★ 已收藏' : '☆ 收藏';
 }
@@ -256,8 +575,9 @@ function renderComment(author, text, detail) {
   const item = element('article', undefined, 'comment');
   const avatar = element('span', author[0], 'avatar');
   avatar.setAttribute('aria-hidden', 'true');
-  const body = element('div');
-  body.append(element('strong', author), element('p', text), element('div', detail, 'meta'));
+  const body = element('div', undefined, 'comment-info');
+  body.append(element('div', author, 'comment-name'), element('p', text, 'comment-text'),
+    element('div', detail, 'comment-meta'));
   item.append(avatar, body);
   return item;
 }
@@ -284,41 +604,55 @@ function renderMap() {
   setDisclosure('map-toggle', 'map-content', state.expanded);
   $('map-arrow').textContent = state.expanded ? '⌃' : '⌄';
   $('map-hint').textContent = scenario.branches ?
-    scenario.branches.length + ' 个讨论方向 · 示例整理' : '原评论不足 3 条';
+    '已整理 ' + scenario.branches.length + ' 个讨论方向' : '原评论不足 3 条';
   if (!state.expanded) return;
   if (!scenario.branches) {
-    content.replaceChildren(element('p', '这个场景只有两条原评论，暂未整理讨论分支。', 'hint'));
+    content.replaceChildren(element('p', '这个场景只有两条原评论，暂未整理讨论分支。', 'map-state'));
     return;
   }
-  const topics = element('div', undefined, 'branches');
+  const tree = element('div', undefined, 'map-tree');
+  const center = element('div', undefined, 'map-center');
+  center.append(element('small', '大家在讨论'), element('strong', scenario.question));
+  const topics = element('div', undefined, 'topic-grid');
   scenario.branches.forEach(([label], index) => {
     const topic = button(label, () => {
       state.branch = state.branch === index ? null : index;
       renderMap();
       $('topic-' + index).focus();
-    });
+    }, state.branch === index ? 'topic selected' : 'topic');
     topic.id = 'topic-' + index;
     topic.setAttribute('aria-pressed', String(state.branch === index));
     topics.append(topic);
   });
-  content.replaceChildren(element('p', scenario.question, 'question'), topics);
+  tree.append(center, $('tree-connector').content.cloneNode(true), topics);
   if (state.branch === null) {
-    content.append(element('p', '选择一个分支，预览代表性原评论。', 'branch-note'));
-    return;
+    tree.append(element('p', '点击一个讨论分支，预览一条原评论。', 'map-footnote'));
+  } else {
+    const [label, focus, index] = scenario.branches[state.branch];
+    const [author, quote] = scenario.comments[index];
+    const preview = element('div', undefined, 'preview');
+    const actions = element('div', undefined, 'preview-actions');
+    actions.append(button('查看相关原评论 →', () => jumpToComment(index)));
+    preview.append(element('p', label + ' · 代表性原评论', 'preview-title'),
+      element('p', focus, 'preview-focus'), element('div', author, 'quote-author'),
+      element('p', quote, 'quote-body'), actions);
+    tree.append(preview);
   }
-  const [, focus, index] = scenario.branches[state.branch];
-  const [author, quote] = scenario.comments[index];
-  const preview = element('div', undefined, 'preview');
-  preview.append(element('div', focus, 'hint'), element('p', author + '：' + quote),
-    button('定位原评论 →', () => jumpToComment(index)));
-  content.append(preview);
+  tree.append(element('p', '讨论地图为静态示例，内容以原评论为准。', 'map-warning'));
+  content.replaceChildren(tree);
 }
 
 function renderScenario() {
   const scenario = scenarios[state.scenario];
   $('post-title').textContent = scenario.title;
-  $('post-body').replaceChildren(...scenario.paragraphs.map(text => element('p', text)));
-  $('comment-title').textContent = '原评论 · ' + scenario.comments.length + ' 条';
+  $('post-author').textContent = scenario.author;
+  $('post-avatar').textContent = scenario.author[0];
+  $('post-time').textContent = scenario.time;
+  $('post-body').textContent = scenario.paragraphs.join('\n');
+  $('post-shares').textContent = scenario.shares.toLocaleString('zh-CN');
+  $('post-comments-total').textContent = scenario.comments.length.toLocaleString('zh-CN');
+  $('comment-total').textContent = $('post-comments-total').textContent;
+  $('comments-count').textContent = '已载入 ' + scenario.comments.length + ' 条示例评论';
   $('comment-list').replaceChildren(...scenario.comments.map(([author, text, likes], index) => {
     const item = renderComment(author, text, '赞 ' + likes);
     item.id = 'comment-' + index;
@@ -329,6 +663,7 @@ function renderScenario() {
   $('search-results').replaceChildren();
   $('comment-input').value = '';
   setDisclosure('search-toggle', 'search', false);
+  $('search-toggle').classList.remove('open');
   state.expanded = false;
   state.branch = null;
   state.manual = false;
@@ -350,7 +685,11 @@ function toggleReaction(kind) {
 
 $('scenario').value = state.scenario;
 $('identity').value = state.identity;
-$('settings').addEventListener('click', () => setDisclosure('settings', 'controls', $('controls').hidden));
+$('settings').addEventListener('click', () => {
+  const opening = $('controls').hidden;
+  setDisclosure('settings', 'controls', opening);
+  $('settings-arrow').textContent = opening ? '⌃' : '⌄';
+});
 $('scenario').addEventListener('change', event => {
   state.scenario = model.scenario = event.target.value;
   persist();
@@ -371,6 +710,7 @@ $('map-toggle').addEventListener('click', () => {
 $('search-toggle').addEventListener('click', () => {
   const opening = $('search').hidden;
   setDisclosure('search-toggle', 'search', opening);
+  $('search-toggle').classList.toggle('open', opening);
   if (opening) $('query').focus();
 });
 $('search').addEventListener('submit', event => {
@@ -387,7 +727,7 @@ $('search').addEventListener('submit', event => {
       matches.push(button(author + '：' + text, () => jumpToComment(index)));
     }
   });
-  results.replaceChildren(element('p', '找到 ' + matches.length + ' 条评论。', 'hint'), ...matches);
+  results.replaceChildren(element('p', '找到 ' + matches.length + ' 条评论。'), ...matches);
 });
 $('composer').addEventListener('submit', event => {
   event.preventDefault();
@@ -410,7 +750,7 @@ $('write').addEventListener('click', () => {
   $('comment-input').focus({ preventScroll: true });
   show($('composer'), 'center');
 });
-$('top').addEventListener('click', () => show(document.querySelector('.header')));
+$('top').addEventListener('click', () => show(document.querySelector('.exam-tools')));
 $('copy').addEventListener('click', async () => {
   if (location.protocol !== 'https:') {
     notify('上线后可复制公开链接。');
@@ -427,7 +767,8 @@ $('copy').addEventListener('click', async () => {
 renderScenario();
 setInterval(() => {
   if (document.hidden || state.manual || state.expanded || !scenarios[state.scenario].branches) return;
-  if ($('post').getBoundingClientRect().bottom <= 100 || $('discussion').getBoundingClientRect().top <= 210) return;
+  const bounds = $('post').getBoundingClientRect();
+  if (bounds.bottom <= 100 || bounds.top >= innerHeight || $('discussion').getBoundingClientRect().top <= 210) return;
   if (++state.readSeconds >= 5) {
     state.expanded = true;
     renderMap();
